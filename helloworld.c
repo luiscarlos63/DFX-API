@@ -60,33 +60,23 @@
 // ----------------------------- File names ---------------------------------
 const char* rmConst45_name = "cnt45bs.bin";
 const char* rmConst37_name = "cnt35bs.bin";
-const char* rmAdd65_name = "add65bs.bin";
-const char* rmAdd35_name = "add25bs.bin";
-const char* rmMult5_name = "mul5bs.bin";
-const char* rmMult50_name = "mul50bs.bin";
+
 
 
 int main()
 {
 
 	u32 	  * pcapCtrlPtr 	= (u32*)0x00FFCA3008;
-	u_int32_t * hw32_vptr	 	= (u_int32_t*)0xA0000000;
-	u_int32_t  	addred = 0;
-	u_int32_t  	my_value = 0;
+	u_int32_t * RP_const_addr 	= (u_int32_t*)0xA0010000;
 	int command = 0;
 	u32 status;
 
 	bitstream_t bit_const37;
 	bitstream_t bit_const45;
-	bitstream_t bit_add35;
-	bitstream_t bit_add65;
-	bitstream_t bit_mult5;
-	bitstream_t bit_mult50;
+
 
     init_platform();
     disable_caches();
-
-
 
     // ------------------------ PCAP disable ----------------------------------
     printf("\nPCAP_CNTR = %X", (u32)*pcapCtrlPtr);
@@ -95,15 +85,9 @@ int main()
     *pcapCtrlPtr = status;
     printf("\nNew PCAP_CNTR = %X", (u32)*pcapCtrlPtr);
 
-
     //-------------------------loading Bitstreams  to memory -----------------------------
     bitstream_init(&bit_const37, rmConst37_name);
     bitstream_init(&bit_const45, rmConst45_name);
-    bitstream_init(&bit_add35, rmAdd35_name);
-    bitstream_init(&bit_add65, rmAdd65_name);
-    bitstream_init(&bit_mult5, rmMult5_name);
-    bitstream_init(&bit_mult50, rmMult50_name);
-
     printf("\nBitstreams loaded into memory ");
 
     //++++++++++++++++++++++++++++++++ DFX Controller Driver initialize +++++++++++++++++++++++++++++++++++++++++++
@@ -117,67 +101,29 @@ int main()
 
     while(1)
 	{
-		printf("\n1 - write to mem");
-		printf("\n2 - read from mem");
-		printf("\n3 - print from  -  +");
-		printf("\n4 - const 45");
-		printf("\n5 - const 37");
-		printf("\n6 - add 65");
-		printf("\n7 - add 35");
-		printf("\n8 - mult 5");
-		printf("\n9 - mult 50");
+		printf("\n\n1 - read from RP_const");
+		printf("\n2 - bit_const_37");
+		printf("\n3 - bit_const_45");
 		printf("\nOption: ");
 		scanf("%d", &command);
 
 		switch(command)
 		{
-			case 1: // Write to position 0 of AXI
-				//get addr
-				printf("\nQual e o addr: ");
-				scanf("%X", &addred);
-
-				//get value
-
-				printf("\nQual e o value: ");
-				scanf("%X", &my_value );
-
-				hw32_vptr[addred/4] = my_value;
+			case 1:
+				printf("\nRP_const value = %X", *RP_const_addr);
 				break;
 
+				/*
+				 * Proof of concept
+				 */
 			case 2:
-				//get addr
-				printf("\nQual e o addr: ");
-				scanf("%X", &addred);
-
-				//print
-				printf("\nO valor em memoria e: %x\n", hw32_vptr[addred/4]);
-				break;
-
-			case 3: // Write to position 0 of AXI
-				//get addr
-				printf("\nQual e o addr: ");
-				scanf("%X", &addred);
-
-				//get offset
-				printf("\nQual e o offs: ");
-				scanf("%X", &my_value);
-
-				printf("\nO valor em memoria de %X , ate %X", hw32_vptr + addred, ( hw32_vptr + addred + my_value));
-				for(int index = 0; index < my_value; index = index + 4)
-				{
-					printf("\n%x", hw32_vptr[addred/4 + (u_int32_t)(index/4)] );
-				}
-				break;
-
-			case 4:
-				print("\nReconfiguring const 37...\n\r");
+				printf("\nReconfiguring RP_const with bit_const_37...\n\r");
 				dfx_load(&bit_const37);
 				break;
-			case 5:
-				print("\nReconfiguring const 45...\n\r");
-				dfx_load(&bit_const37);
+			case 3:
+				printf("\nReconfiguring RP_const with bit_const_45...\n\r");
+				dfx_load(&bit_const45);
 				break;
-
 		default: break;
 		}	// end of "switch(command)"
 

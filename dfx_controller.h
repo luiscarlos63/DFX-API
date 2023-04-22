@@ -11,13 +11,11 @@
 #define XDFXC_DEVICE_ID         XPAR_DFX_CONTROLLER_0_DEVICE_ID
 
 #define XDFXC_VS_CONST_ID		XPAR_DFX_CONTROLLER_0_VS_CONST_ID
+/*
+ * The channel it is still called "Const_45" but the idea is in the next update to
+ * change to simply something more generic according with terminology.
+ */
 #define XDFXC_VS_CONST_45_ID	XPAR_DFX_CONTROLLER_0_VS_CONST_RM_CONST_45_ID
-
-#define  XDFXC_VS_MULT_ID		XPAR_DFX_CONTROLLER_0_VS_MULT_ID
-#define  XDFXC_VS_MULT_5_ID		XPAR_DFX_CONTROLLER_0_VS_MULT_RM_MUL5_ID
-
-#define  XDFXC_VS_ADD_ID		XPAR_DFX_CONTROLLER_0_VS_ADD_ID
-#define  XDFXC_VS_ADD_35_ID		XPAR_DFX_CONTROLLER_0_VS_ADD_RM_ADD_35_ID
 
 
 typedef struct
@@ -28,7 +26,7 @@ typedef struct
 }bitstream_t;
 
 /*
-*    tudo o que é necessario com o carreganto do bitrsream do SD_Card para a DRAM
+*    Everything necessary to laod the bitstreams from SD card to DRAM.
 *                        SD_card -> DRAM
 */
 uint8_t bitstream_init(bitstream_t*, const char* file_path);
@@ -38,23 +36,14 @@ uint8_t bitstream_init(bitstream_t*, const char* file_path);
 
 
 /*
-*    init do dfx standalone
-*    o que é necessario configurar no DFX_C para que este esteja pronto a operar
+*    initialization of dfx standalone
+*    Everything necessary to get the DFX controller up and running.
 */
 uint8_t dfx_init();
 
-
 /*
- * Diz ao DFX Controller o ADDRESS e o SIZE do bitstream
- * Neste momento so funciona para uma RP (CONST)
- */
-uint8_t dfx_bitstrm_set(const bitstream_t*);
-
-
-/*
-*    todas as operaçoes relacionadas com carregamento de um bitstream
-*    (com origem da DRAM para uma RP)
-*                        DRAM -> RM -> RP
+*    Every operation necessary to load the bitstream to the RP
+*                        DRAM -> RP
 *                           DFX_trigger
 */
 uint8_t dfx_load(const bitstream_t*);
@@ -83,6 +72,11 @@ uint8_t dfx_load(const bitstream_t*);
 
 
 /*
+ * Updates:
+ * It already works to case 2. SEE below or the graphical diagram
+ */
+
+/*
     assumptions:
         - o modulo ID 1
 
@@ -91,7 +85,8 @@ uint8_t dfx_load(const bitstream_t*);
         testar, metendo o 37 a funcionar    (caso 1)
         novo branch do GIT
 
-        
+
+
 
 */
 
@@ -103,8 +98,6 @@ uint8_t dfx_load(const bitstream_t*);
 
         RP ----- RM 45 ------ Bit Const 45
 
-        - Sem a API: sim
-        - Com a API:
         
     caso 1.2:
         1 RP com RMn para RBn
@@ -114,8 +107,7 @@ uint8_t dfx_load(const bitstream_t*);
         RP ----- |
         		 +----- RM 37 ------ Bit Const 37
 
-		- Sem a API: sim
-        - Com a API:
+
 
     caso 2: usar uma RP com apenas um RM associado, podendo carregar varios bitstreams (RB) para essa RP (atraves do mesmo RM).
         1 RP com 1 RM para RBn
@@ -126,8 +118,7 @@ uint8_t dfx_load(const bitstream_t*);
         	(RM generico)		+----- Bit Const 37
         	(isto obriga a trocar o endereço do bitstream sempre que é preciso trocar o bitstream)
 
-        - Sem a API: sim
-        - Com a API:
+
 
     caso 2.2: usar varias RPs com cada uma com 1 RM associado. podendo, apenas com esse RM carregar varios bitstreams (RB) para essa RP.
         RPn com RMn para carregar RBnm
@@ -153,7 +144,7 @@ uint8_t dfx_load(const bitstream_t*);
     mesmo que o IP que implmentam seja extamente igual.
 
     No entanto, devido à natureza estatica das RP (uma vez que as partiçoes tem de ser definidas à priori
-    e sao NAO dinamicas),
+    e sao NAO dinamicas), o numero de IPs de repetidos será tambem
         RPn com RMn para carregar IPm
 								Em vez de bitstreams, referimo-nos a acelaradores (ou IPs)
 
@@ -179,4 +170,3 @@ uint8_t dfx_load(const bitstream_t*);
 
 */
 #endif
-

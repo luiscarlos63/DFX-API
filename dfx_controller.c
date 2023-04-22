@@ -29,7 +29,7 @@ int SD_Init()
 	TCHAR *Path = "0:/";
 	rc = f_mount(&fatfs,Path,0);
 	if (rc) {
-		xil_printf(" ERROR : f_mount returned %d\r\n", rc);
+		//xil_printf(" ERROR : f_mount returned %d\r\n", rc);
 		return XST_FAILURE;
 	}
 	return XST_SUCCESS;
@@ -41,7 +41,7 @@ int SD_Eject()
 	TCHAR *Path = "0:/";
 	rc = f_mount(0,Path,1);
 	if (rc) {
-		xil_printf(" ERROR : f_mount returned %d\r\n", rc);
+		//xil_printf(" ERROR : f_mount returned %d\r\n", rc);
 		return XST_FAILURE;
 	}
 	return XST_SUCCESS;
@@ -133,6 +133,11 @@ uint8_t dfx_init()
 }
 
 
+
+/*
+ * Sets the ADDRESS and SIZE of the
+ * At the moment only works for a single RP (CONST)
+ */
 uint8_t dfx_bitstrm_set(const bitstream_t* bit)
 {
 	//DFX controller shutdown
@@ -161,4 +166,3 @@ uint8_t dfx_load(const bitstream_t* source)
 
 
 }
-
