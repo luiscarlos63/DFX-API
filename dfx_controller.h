@@ -4,18 +4,19 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include "xparameters.h"
 
 
 
 // ---------------------------------- defines -----------------------
 #define XDFXC_DEVICE_ID         XPAR_DFX_CONTROLLER_0_DEVICE_ID
 
-#define XDFXC_VS_CONST_ID		XPAR_DFX_CONTROLLER_0_VS_CONST_ID
+#define XDFXC_VS_RP_1_ID		XPAR_DFX_CONTROLLER_0_0_VS_1_ID
 /*
  * The channel it is still called "Const_45" but the idea is in the next update to
  * change to simply something more generic according with terminology.
  */
-#define XDFXC_VS_CONST_45_ID	XPAR_DFX_CONTROLLER_0_VS_CONST_RM_CONST_45_ID
+#define XDFXC_VS_RP_1_CHANNEL_ID	XPAR_DFX_CONTROLLER_0_0_VS_1_RP_1_ID
 
 
 typedef struct

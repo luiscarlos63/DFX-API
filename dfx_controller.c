@@ -1,6 +1,5 @@
 #include "dfx_controller.h"
 #include "ff.h"
-#include "xparameters.h"
 #include "xprc.h"
 
 
@@ -141,14 +140,14 @@ uint8_t dfx_init()
 uint8_t dfx_bitstrm_set(const bitstream_t* bit)
 {
 	//DFX controller shutdown
-    XPrc_SendShutdownCommand(&Prc, XDFXC_VS_CONST_ID);
-	while(XPrc_IsVsmInShutdown(&Prc, XDFXC_VS_CONST_ID)==XPRC_SR_SHUTDOWN_OFF);
+    XPrc_SendShutdownCommand(&Prc, XDFXC_VS_RP_1_ID);
+	while(XPrc_IsVsmInShutdown(&Prc, XDFXC_VS_RP_1_ID)==XPRC_SR_SHUTDOWN_OFF);
 
-    XPrc_SetBsSize   (&Prc, XDFXC_VS_CONST_ID, XDFXC_VS_CONST_45_ID,  bit->size);
-    XPrc_SetBsAddress(&Prc, XDFXC_VS_CONST_ID, XDFXC_VS_CONST_45_ID,  bit->data);
+    XPrc_SetBsSize   (&Prc, XDFXC_VS_RP_1_ID, XDFXC_VS_RP_1_CHANNEL_ID,  bit->size);
+    XPrc_SetBsAddress(&Prc, XDFXC_VS_RP_1_ID, XDFXC_VS_RP_1_CHANNEL_ID,  bit->data);
 
-    XPrc_SendRestartWithNoStatusCommand(&Prc, XDFXC_VS_CONST_ID);
-	while(XPrc_IsVsmInShutdown(&Prc, XDFXC_VS_CONST_ID)==XPRC_SR_SHUTDOWN_ON);
+    XPrc_SendRestartWithNoStatusCommand(&Prc, XDFXC_VS_RP_1_ID);
+	while(XPrc_IsVsmInShutdown(&Prc, XDFXC_VS_RP_1_ID)==XPRC_SR_SHUTDOWN_ON);
 }
 
 
@@ -159,9 +158,9 @@ uint8_t dfx_load(const bitstream_t* source)
 	dfx_bitstrm_set(source);
 
 
-    if (XPrc_IsSwTriggerPending(&Prc, XDFXC_VS_CONST_ID, NULL)==XPRC_NO_SW_TRIGGER_PENDING) {
+    if (XPrc_IsSwTriggerPending(&Prc, XDFXC_VS_RP_1_ID, NULL)==XPRC_NO_SW_TRIGGER_PENDING) {
         
-        XPrc_SendSwTrigger(&Prc, XDFXC_VS_CONST_ID, XDFXC_VS_CONST_45_ID);
+        XPrc_SendSwTrigger(&Prc, XDFXC_VS_RP_1_ID, XDFXC_VS_RP_1_CHANNEL_ID);
     }
 
 
